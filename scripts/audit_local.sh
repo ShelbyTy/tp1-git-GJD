@@ -2,6 +2,26 @@
 # audit_local.sh — Fonctionnalité B : audit des comptes utilisateurs locaux
 # Lecture seule, aucun droit administrateur requis. Compatible macOS et Linux.
 
+ ----- Options -----
+usage() {
+  echo "Usage : $0 [-o fichier] [-h]"
+  echo "  -o fichier : enregistre aussi le rapport dans un fichier"
+  echo "  -h         : affiche cette aide"
+}
+
+FICHIER=""
+while getopts "o:h" opt; do
+  case "$opt" in
+    o) FICHIER="$OPTARG" ;;
+    h) usage; exit 0 ;;
+    *) usage; exit 1 ;;
+  esac
+done
+
+if [ -n "$FICHIER" ]; then
+  exec > >(tee "$FICHIER") 2>&1
+fi
+
 OS=$(uname -s)
 echo "===== AUDIT DES COMPTES LOCAUX — $(hostname) — $(date '+%F %T') ====="
 echo "Système : $OS"
@@ -57,4 +77,10 @@ if [ -z "$resultat" ]; then
   echo "Aucun compte desactive"
 else
   echo "$resultat"
+fi
+
+
+if [ -n "$FICHIER" ]; then
+  echo
+  echo "Rapport enregistre dans : $FICHIER"
 fi
