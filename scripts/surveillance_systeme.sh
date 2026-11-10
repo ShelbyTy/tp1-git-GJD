@@ -57,5 +57,42 @@ else
 fi
 echo "Utilisation CPU  : ${usage}%"
 
+# =============================================================
+# SECTION 2 : MÉMOIRE (RAM et swap)
+# =============================================================
+echo
+echo "---------- MÉMOIRE ----------"
+
+# Calcule un pourcentage entier : pourcentage $partie $total
+pourcentage() {
+    if [ "$2" -gt 0 ]; then
+        echo $(( 100 * $1 / $2 ))
+    else
+        echo 0
+    fi
+}
+
+# /proc/meminfo fournit les valeurs en kilo-octets (kB)
+ram_totale=$(awk '/^MemTotal:/     {print $2}' /proc/meminfo)
+ram_dispo=$(awk '/^MemAvailable:/  {print $2}' /proc/meminfo)   # mémoire réellement disponible
+swap_totale=$(awk '/^SwapTotal:/   {print $2}' /proc/meminfo)
+swap_libre=$(awk '/^SwapFree:/     {print $2}' /proc/meminfo)
+
+# Mémoire utilisée = totale - disponible (MemAvailable tient compte des caches récupérables)
+ram_utilisee=$(( ram_totale - ram_dispo ))
+swap_utilisee=$(( swap_totale - swap_libre ))
+
+# Conversion kB -> Mo (division entière)
+echo "RAM totale       : $(( ram_totale / 1024 )) Mo"
+echo "RAM utilisée     : $(( ram_utilisee / 1024 )) Mo ($(pourcentage "$ram_utilisee" "$ram_totale")%)"
+echo "RAM disponible   : $(( ram_dispo / 1024 )) Mo"
+
+if [ "$swap_totale" -gt 0 ]; then
+    echo "Swap total       : $(( swap_totale / 1024 )) Mo"
+    echo "Swap utilisé     : $(( swap_utilisee / 1024 )) Mo ($(pourcentage "$swap_utilisee" "$swap_totale")%)"
+else
+    echo "Swap             : aucun swap configuré"
+fi
+
 echo
 echo "=============================================="
