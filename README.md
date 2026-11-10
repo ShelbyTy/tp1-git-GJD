@@ -149,3 +149,6 @@ Les Issues servent à noter chaque tâche, bug ou idée, avec une description, u
 **Auteur :** Étudiant 3 (Gaspard Grignet Le Perron)
 **Réponse :**
 On peut regarder l'historique des commits d'un fichier, ou utiliser le « blame », qui montre pour chaque ligne qui l'a modifiée en dernier et dans quel commit. Depuis ce commit, on remonte à la pull request et à l'Issue liées, ce qui explique le contexte et la raison du changement. En ligne de commande, git log et git blame font la même chose.
+
+
+![alt text](image.png)
