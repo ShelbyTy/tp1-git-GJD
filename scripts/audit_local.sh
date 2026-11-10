@@ -35,3 +35,6 @@ else
     getent group "$g" >/dev/null && echo "$g :$(getent group "$g" | cut -d: -f4)"
   done
 fi
+echo
+echo "----- 10 dernieres connexions -----"
+last -n 10 2>/dev/null || echo "commande last indisponible"
