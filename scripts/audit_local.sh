@@ -25,3 +25,13 @@ else
     fi
   done < /etc/passwd
 fi
+
+echo
+echo "----- Comptes administrateurs -----"
+if [ "$OS" = "Darwin" ]; then
+  dscl . -read /Groups/admin GroupMembership 2>/dev/null | cut -d: -f2
+else
+  for g in sudo wheel; do
+    getent group "$g" >/dev/null && echo "$g :$(getent group "$g" | cut -d: -f4)"
+  done
+fi
