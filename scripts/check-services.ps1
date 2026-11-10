@@ -1,10 +1,14 @@
-# V1 : Vérification basique d'un service sous Windows
-$ServiceName = "Spooler"
+# V2 : Liste de services Windows et compte rendu structuré
+$Services = @("Spooler", "W32Time", "TermService")
+$Date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
-$service = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
+Write-Host "=== Compte rendu des services Windows - $Date ==="
 
-if ($service -and $service.Status -eq 'Running') {
-    Write-Host "Le service $ServiceName est en marche." -ForegroundColor Green
-} else {
-    Write-Host "Le service $ServiceName est arrêté." -ForegroundColor Red
+foreach ($svcName in $Services) {
+    $svc = Get-Service -Name $svcName -ErrorAction SilentlyContinue
+    if ($svc -and $svc.Status -eq 'Running') {
+        Write-Host "[OK] Le service $svcName est actif."
+    } else {
+        Write-Host "[ALERTE] Le service $svcName est inactif."
+    }
 }
